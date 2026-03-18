@@ -28,7 +28,7 @@ Objetivo: dejar un entorno base preconfigurado en minutos para empezar a trabaja
 ## Requisitos
 
 - Windows (CMD o PowerShell) o Linux/macOS (bash/zsh)
-- PowerShell 7 (pwsh) para ejecutar el motor
+- PowerShell disponible en PATH (`pwsh` o `powershell.exe`)
 - Node.js (incluye npx)
 - Conexion a internet
 
