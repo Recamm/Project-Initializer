@@ -112,6 +112,10 @@ Si algo falla:
 - Copiar y ejecutar la linea Retry
 - Revisar el log correspondiente
 
-## Licencia
+## Aviso de IA y responsabilidad
 
-Pendiente de definir. Recomendado: MIT.
+Este proyecto fue generado y ajustado con ayuda de inteligencia artificial.
+
+Lo comparto con fines de aprendizaje e interes propio.
+
+No asumo responsabilidad por consecuencias derivadas de su uso, instalacion, modificacion o ejecucion en entornos de terceros o de produccion.
