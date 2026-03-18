@@ -1,3 +1,5 @@
+![Project Initializer Banner](assets/banner.svg)
+
 # Project Initializer (Windows)
 
 Inicializador de proyectos para Windows con menu interactivo, perfiles de instalacion, modo no interactivo y logging.
