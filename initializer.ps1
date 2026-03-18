@@ -261,7 +261,13 @@ function Execute-CommandItem {
     Write-Host ""
     Write-Host ("Running: {0}" -f $Item.Label) -ForegroundColor Yellow
 
-    while ([Console]::KeyAvailable) { [void][Console]::ReadKey($true) }
+    if (-not $IsNonInteractive) {
+        try {
+            while ([Console]::KeyAvailable) { [void][Console]::ReadKey($true) }
+        } catch {
+            # Ignorar cuando no hay consola interactiva (ej. ejecucion por pipe/redireccion)
+        }
+    }
 
     if (-not (Confirm-HighRisk -Item $Item -Allow:$AllowHighRisk -IsNonInteractive:$IsNonInteractive)) {
         return [pscustomobject]@{

@@ -5,6 +5,7 @@ DEFAULT_RAW_BASE="https://raw.githubusercontent.com/Recamm/Project-Initializer/m
 RAW_BASE="${INIT_RAW_BASE:-$DEFAULT_RAW_BASE}"
 INIT_REPO="${INIT_REPO:-Recamm/Project-Initializer}"
 INIT_REF="${INIT_REF:-main}"
+TMP_DIR=""
 
 PS_BIN=""
 
@@ -84,18 +85,19 @@ run_remote() {
     return 1
   }
 
-  local tmp_dir
-  tmp_dir="$(mktemp -d 2>/dev/null || mktemp -d -t initializer.XXXXXX)"
+  TMP_DIR="$(mktemp -d 2>/dev/null || mktemp -d -t initializer.XXXXXX)"
 
   cleanup() {
-    rm -rf "$tmp_dir"
+    if [[ -n "${TMP_DIR:-}" ]]; then
+      rm -rf "$TMP_DIR"
+    fi
   }
   trap cleanup EXIT
 
-  download_file "initializer.ps1" "$tmp_dir/initializer.ps1"
-  download_file "initializer.config.json" "$tmp_dir/initializer.config.json"
+  download_file "initializer.ps1" "$TMP_DIR/initializer.ps1"
+  download_file "initializer.config.json" "$TMP_DIR/initializer.config.json"
 
-  "$PS_BIN" -NoProfile -File "$tmp_dir/initializer.ps1" -ConfigPath "$tmp_dir/initializer.config.json" "$@"
+  "$PS_BIN" -NoProfile -File "$TMP_DIR/initializer.ps1" -ConfigPath "$TMP_DIR/initializer.config.json" "$@"
 }
 
 MODE="auto"
