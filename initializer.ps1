@@ -213,27 +213,40 @@ function Confirm-HighRisk {
 
 function Invoke-CommandWithRetry {
     param(
-        [string]$CommandLine,
+        [string]$FilePath,
+        [string[]]$Arguments,
         [string]$WorkingDirectory,
-        [int]$RetryCount
+        [int]$RetryCount,
+        [string]$DisplayCommand
     )
 
     $attempt = 0
+    $lastCode = 1
+    $lastError = ""
+
     do {
         $attempt++
-        Write-Host ("Intento {0}/{1}: {2}" -f $attempt, ($RetryCount + 1), $CommandLine) -ForegroundColor DarkGray
-        $process = Start-Process -FilePath "cmd.exe" -ArgumentList "/d", "/s", "/c", $CommandLine -NoNewWindow -Wait -PassThru -WorkingDirectory $WorkingDirectory
-        $code = $process.ExitCode
-        if ($code -eq 0) {
-            return [pscustomobject]@{ Success = $true; ExitCode = 0 }
+        Write-Host ("Intento {0}/{1}: {2}" -f $attempt, ($RetryCount + 1), $DisplayCommand) -ForegroundColor DarkGray
+
+        try {
+            $process = Start-Process -FilePath $FilePath -ArgumentList $Arguments -NoNewWindow -Wait -PassThru -WorkingDirectory $WorkingDirectory
+            $lastCode = $process.ExitCode
+            if ($lastCode -eq 0) {
+                return [pscustomobject]@{ Success = $true; ExitCode = 0; Error = "" }
+            }
+        } catch {
+            $lastCode = -1
+            $lastError = $_.Exception.Message
+            Write-Host ("Error ejecutando comando: {0}" -f $lastError) -ForegroundColor Yellow
         }
+
         if ($attempt -le $RetryCount) {
             Start-Sleep -Seconds 2
             Write-Host "Reintentando por fallo transitorio..." -ForegroundColor Yellow
         }
     } while ($attempt -le $RetryCount)
 
-    return [pscustomobject]@{ Success = $false; ExitCode = $code }
+    return [pscustomobject]@{ Success = $false; ExitCode = $lastCode; Error = $lastError }
 }
 
 function Execute-CommandItem {
@@ -262,8 +275,12 @@ function Execute-CommandItem {
 
     if ($Item.Type -eq "skill-add") {
         $commandLine = "npx skills add $($Item.Repo) --skill $($Item.Skill)"
+        $filePath = "npx"
+        $arguments = @("skills", "add", $Item.Repo, "--skill", $Item.Skill)
     } elseif ($Item.Type -eq "skills-update") {
         $commandLine = "npx skills update"
+        $filePath = "npx"
+        $arguments = @("skills", "update")
     } else {
         return [pscustomobject]@{
             Label = $Item.Label
@@ -275,13 +292,18 @@ function Execute-CommandItem {
     }
 
     Write-Host "Interactive installer enabled in this same terminal." -ForegroundColor DarkGray
-    $run = Invoke-CommandWithRetry -CommandLine $commandLine -WorkingDirectory $WorkingDirectory -RetryCount $RetryCount
+    $run = Invoke-CommandWithRetry -FilePath $filePath -Arguments $arguments -WorkingDirectory $WorkingDirectory -RetryCount $RetryCount -DisplayCommand $commandLine
+
+    $detail = $Item.Label
+    if (-not $run.Success -and $run.Error) {
+        $detail = $run.Error
+    }
 
     return [pscustomobject]@{
         Label = $Item.Label
         Success = $run.Success
         ExitCode = $run.ExitCode
-        Detail = $Item.Label
+        Detail = $detail
         RetryCommand = $commandLine
     }
 }

@@ -1,23 +1,25 @@
 ![Project Initializer Banner](assets/banner.svg)
 
-# Project Initializer (Windows)
+# Project Initializer (Cross-platform)
 
-Inicializador de proyectos para Windows con menu interactivo, perfiles de instalacion, modo no interactivo y logging.
+Inicializador de proyectos para Windows, Linux y macOS con menu interactivo, perfiles de instalacion, modo no interactivo y logging.
 
 Objetivo: dejar un entorno base preconfigurado en minutos para empezar a trabajar sin repetir setup manual.
 
 ## Que incluye
 
-- Launcher en BAT para ejecutar todo con doble click o consola.
+- Launcher en BAT para Windows y launcher SH para Linux/macOS.
 - Script principal en PowerShell para logica y orquestacion.
 - Configuracion externa en JSON (tasks, perfiles, fuentes de prompts).
 - Seleccion interactiva por teclado y ejecucion por lotes.
 - Reintentos automaticos en fallos transitorios de red/comandos.
 - Logs por ejecucion en carpeta logs.
+- Modo remoto efimero desde terminal (sin clonar ni dejar archivos en el repo).
 
 ## Arquitectura
 
 - initializer.bat: launcher minimal.
+- initializer.sh: launcher POSIX con modo local/remoto.
 - initializer.ps1: motor principal.
 - initializer.config.json: tareas y perfiles.
 - prompts/v0.txt: prompt descargado (se crea durante la ejecucion).
@@ -25,7 +27,8 @@ Objetivo: dejar un entorno base preconfigurado en minutos para empezar a trabaja
 
 ## Requisitos
 
-- Windows (CMD o PowerShell)
+- Windows (CMD o PowerShell) o Linux/macOS (bash/zsh)
+- PowerShell 7 (pwsh) para ejecutar el motor
 - Node.js (incluye npx)
 - Conexion a internet
 
@@ -53,6 +56,12 @@ Ejecutar:
 initializer.bat
 ```
 
+En Linux/macOS:
+
+```bash
+bash initializer.sh
+```
+
 Controles:
 
 - Up/Down: mover cursor
@@ -73,6 +82,30 @@ initializer.bat -NonInteractive -PromptOnly
 initializer.bat -NonInteractive -Profile camil-default -AllowHighRisk
 initializer.bat -NonInteractive -Profile camil-default -Retries 3
 ```
+
+Equivalente en Linux/macOS:
+
+```bash
+bash initializer.sh -NonInteractive -Profile camil-default
+bash initializer.sh -NonInteractive -All
+bash initializer.sh -NonInteractive -PromptOnly
+bash initializer.sh -NonInteractive -Profile camil-default -AllowHighRisk
+bash initializer.sh -NonInteractive -Profile camil-default -Retries 3
+```
+
+## Ejecucion remota sin ensuciar el proyecto
+
+Si queres correrlo desde terminal sin clonar el repo ni dejar archivos en tu carpeta actual:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/Recamm/Project-Initializer/main/initializer.sh | bash -s -- --remote -NonInteractive -Profile camil-default
+```
+
+Notas:
+
+- Descarga `initializer.ps1` y `initializer.config.json` a una carpeta temporal.
+- Ejecuta todo desde ahi y elimina esa carpeta al terminar.
+- Tambien podes pasar cualquier parametro soportado por el script.
 
 Parametros principales:
 
