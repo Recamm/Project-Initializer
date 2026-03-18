@@ -250,7 +250,12 @@ function Invoke-CommandWithRetry {
         Write-Host ("Intento {0}/{1}: {2}" -f $attempt, ($RetryCount + 1), $DisplayCommand) -ForegroundColor DarkGray
 
         try {
-            $process = Start-Process -FilePath $FilePath -ArgumentList $Arguments -NoNewWindow -Wait -PassThru -WorkingDirectory $WorkingDirectory
+            if ($env:OS -eq "Windows_NT") {
+                # En Windows, cmd.exe maneja correctamente wrappers .cmd/.bat como npx.cmd.
+                $process = Start-Process -FilePath "cmd.exe" -ArgumentList "/d", "/s", "/c", $DisplayCommand -NoNewWindow -Wait -PassThru -WorkingDirectory $WorkingDirectory
+            } else {
+                $process = Start-Process -FilePath $FilePath -ArgumentList $Arguments -NoNewWindow -Wait -PassThru -WorkingDirectory $WorkingDirectory
+            }
             $lastCode = $process.ExitCode
             if ($lastCode -eq 0) {
                 return [pscustomobject]@{ Success = $true; ExitCode = 0; Error = "" }
