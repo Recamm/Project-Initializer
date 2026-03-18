@@ -93,6 +93,27 @@ function Test-Prerequisites {
     }
 }
 
+function Resolve-NpxExecutable {
+    # En Windows, Start-Process puede fallar con ciertos shims de npx.
+    # Priorizamos npx.cmd/npx.exe para invocar un ejecutable valido.
+    $candidates = @("npx")
+    if ($env:OS -eq "Windows_NT") {
+        $candidates = @("npx.cmd", "npx.exe", "npx")
+    }
+
+    foreach ($candidate in $candidates) {
+        $cmd = Get-Command $candidate -ErrorAction SilentlyContinue | Select-Object -First 1
+        if ($cmd) {
+            if ($cmd.Source) {
+                return $cmd.Source
+            }
+            return $candidate
+        }
+    }
+
+    Stop-WithError "No se encontro un ejecutable valido para npx en PATH."
+}
+
 function Load-Config {
     param([string]$Path)
 
@@ -279,13 +300,15 @@ function Execute-CommandItem {
         }
     }
 
+    $npxExecutable = Resolve-NpxExecutable
+
     if ($Item.Type -eq "skill-add") {
         $commandLine = "npx skills add $($Item.Repo) --skill $($Item.Skill)"
-        $filePath = "npx"
+        $filePath = $npxExecutable
         $arguments = @("skills", "add", $Item.Repo, "--skill", $Item.Skill)
     } elseif ($Item.Type -eq "skills-update") {
         $commandLine = "npx skills update"
-        $filePath = "npx"
+        $filePath = $npxExecutable
         $arguments = @("skills", "update")
     } else {
         return [pscustomobject]@{

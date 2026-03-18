@@ -101,6 +101,12 @@ Si queres correrlo desde terminal sin clonar el repo ni dejar archivos en tu car
 curl -fsSL https://raw.githubusercontent.com/Recamm/Project-Initializer/main/initializer.sh | bash -s -- --remote -NonInteractive -Profile camil-default
 ```
 
+En Windows (PowerShell), equivalente one-liner:
+
+```powershell
+$base='https://raw.githubusercontent.com/Recamm/Project-Initializer/main'; $tmp=Join-Path $env:TEMP ('initializer_' + [guid]::NewGuid().ToString('N')); New-Item -ItemType Directory -Path $tmp -Force | Out-Null; try { Invoke-WebRequest -Uri "$base/initializer.ps1" -OutFile "$tmp/initializer.ps1" -UseBasicParsing; Invoke-WebRequest -Uri "$base/initializer.config.json" -OutFile "$tmp/initializer.config.json" -UseBasicParsing; powershell -NoProfile -ExecutionPolicy Bypass -File "$tmp/initializer.ps1" -ConfigPath "$tmp/initializer.config.json" -NonInteractive -Profile camil-default } finally { Remove-Item -LiteralPath $tmp -Recurse -Force -ErrorAction SilentlyContinue }
+```
+
 Notas:
 
 - Descarga `initializer.ps1` y `initializer.config.json` a una carpeta temporal.
