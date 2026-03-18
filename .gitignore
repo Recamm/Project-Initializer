@@ -1,0 +1,13 @@
+# Runtime artifacts
+logs/
+prompts/
+
+# Generated lock/state file from local skill installs
+skills-lock.json
+
+# Windows
+Thumbs.db
+Desktop.ini
+
+# Editors
+.vscode/

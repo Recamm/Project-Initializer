@@ -1,0 +1,152 @@
+{
+  "version": 1,
+  "promptSources": [
+    "https://raw.githubusercontent.com/x1xhlol/system-prompts-and-models-of-ai-tools/main/v0%20Prompts%20and%20Tools/Prompt.txt",
+    "https://raw.githubusercontent.com/x1xhlol/system-prompts-and-models-of-ai-tools/master/v0%20Prompts%20and%20Tools/Prompt.txt"
+  ],
+  "tasks": [
+    {
+      "id": "find-skills",
+      "label": "Install find-skills",
+      "type": "skill-add",
+      "repo": "https://github.com/vercel-labs/skills",
+      "skill": "find-skills",
+      "defaultSelected": true,
+      "riskHint": "low"
+    },
+    {
+      "id": "vercel-react-best-practices",
+      "label": "Install vercel-react-best-practices",
+      "type": "skill-add",
+      "repo": "https://github.com/vercel-labs/agent-skills",
+      "skill": "vercel-react-best-practices",
+      "defaultSelected": true,
+      "riskHint": "low"
+    },
+    {
+      "id": "web-design-guidelines",
+      "label": "Install web-design-guidelines",
+      "type": "skill-add",
+      "repo": "https://github.com/vercel-labs/agent-skills",
+      "skill": "web-design-guidelines",
+      "defaultSelected": true,
+      "riskHint": "low"
+    },
+    {
+      "id": "frontend-design",
+      "label": "Install frontend-design",
+      "type": "skill-add",
+      "repo": "https://github.com/anthropics/skills",
+      "skill": "frontend-design",
+      "defaultSelected": true,
+      "riskHint": "low"
+    },
+    {
+      "id": "skill-creator",
+      "label": "Install skill-creator",
+      "type": "skill-add",
+      "repo": "https://github.com/anthropics/skills",
+      "skill": "skill-creator",
+      "defaultSelected": true,
+      "riskHint": "low"
+    },
+    {
+      "id": "vercel-composition-patterns",
+      "label": "Install vercel-composition-patterns",
+      "type": "skill-add",
+      "repo": "https://github.com/vercel-labs/agent-skills",
+      "skill": "vercel-composition-patterns",
+      "defaultSelected": true,
+      "riskHint": "low"
+    },
+    {
+      "id": "ai-image-generation",
+      "label": "Install ai-image-generation",
+      "type": "skill-add",
+      "repo": "https://github.com/inferen-sh/skills",
+      "skill": "ai-image-generation",
+      "defaultSelected": true,
+      "riskHint": "medium"
+    },
+    {
+      "id": "ui-ux-pro-max",
+      "label": "Install ui-ux-pro-max",
+      "type": "skill-add",
+      "repo": "https://github.com/nextlevelbuilder/ui-ux-pro-max-skill",
+      "skill": "ui-ux-pro-max",
+      "defaultSelected": true,
+      "riskHint": "high"
+    },
+    {
+      "id": "browser-use",
+      "label": "Install browser-use",
+      "type": "skill-add",
+      "repo": "https://github.com/browser-use/browser-use",
+      "skill": "browser-use",
+      "defaultSelected": true,
+      "riskHint": "high"
+    },
+    {
+      "id": "skills-update",
+      "label": "Update installed skills",
+      "type": "skills-update",
+      "defaultSelected": true,
+      "riskHint": "low"
+    },
+    {
+      "id": "prompt-download",
+      "label": "Download Prompt.txt to prompts/v0.txt",
+      "type": "prompt-download",
+      "defaultSelected": true,
+      "riskHint": "low"
+    }
+  ],
+  "profiles": [
+    {
+      "name": "camil-default",
+      "description": "Perfil del usuario con todas las skills y prompt actuales.",
+      "taskIds": [
+        "find-skills",
+        "vercel-react-best-practices",
+        "web-design-guidelines",
+        "frontend-design",
+        "skill-creator",
+        "vercel-composition-patterns",
+        "ai-image-generation",
+        "ui-ux-pro-max",
+        "browser-use",
+        "skills-update",
+        "prompt-download"
+      ]
+    },
+    {
+      "name": "frontend-starter",
+      "description": "Perfil centrado en frontend y UX.",
+      "taskIds": [
+        "find-skills",
+        "frontend-design",
+        "web-design-guidelines",
+        "ui-ux-pro-max",
+        "prompt-download"
+      ]
+    },
+    {
+      "name": "ai-starter",
+      "description": "Perfil centrado en skills de IA y navegacion.",
+      "taskIds": [
+        "find-skills",
+        "ai-image-generation",
+        "browser-use",
+        "prompt-download"
+      ]
+    },
+    {
+      "name": "minimal",
+      "description": "Solo mantenimiento base y prompts.",
+      "taskIds": [
+        "skills-update",
+        "prompt-download"
+      ]
+    }
+  ]
+}
